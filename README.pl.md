@@ -1,106 +1,163 @@
-**Read in other languages: [rosyjski](README.md), [polski](README.pl.md).**
+**Czytaj w innych językach [rosyjski](README.md), [ukraiński](README.ua.md).**
 
-# React homework template
+# Refaktoryzacja kodu - Książka telefoniczna
 
-Ten projekt został stworzony przy pomocy
-[Create React App](https://github.com/facebook/create-react-app). W celu
-zapoznania się z ustawieniami dodatkowych opcji
-[zobacz dokumentację](https://facebook.github.io/create-react-app/docs/getting-started).
+Napisz aplikację do przechowywania kontaktów w książce telefonicznej.
 
-## Przygotowanie nowego projektu
+## Krok 1
 
-1. Upewnij się, że na komputerze zainstalowana jest wersja LTS Node.js.
-   [Ściągnij i zainstaluj](https://nodejs.org/en/), jeżeli trzeba.
-2. Sklonuj to repozytorium.
-3. Zmień nazwę folderu z `react-homework-template` na nazwę swojego projektu.
-4. Utwórz nowe, puste repozytorium na GitHub.
-5. Otwórz projekt w VSCode, włącz terminal i połącz projekt z repozytorium
-   GitHub
-   [zgodnie z instrukcją](https://docs.github.com/en/get-started/getting-started-with-git/managing-remote-repositories#changing-a-remote-repositorys-url).
-6. Utwórz bazowe zależności projektu przy pomocy polecenia `npm install`.
-7. Włącz tryb pracy, wykonując polecenie `npm start`.
-8. Przejdź w przeglądarce pod adres
-   [http://localhost:3000](http://localhost:3000). Ta strona będzie
-   automatycznie przeładowywać się po zapisaniu zmian w plikach projektu.
+Aplikacja powinna składać się z formularza i listy kontaktów. W tym kroku
+zrealizuj dodanie nazwy kontaktu i wyświetlanie listy kontaktów. Aplikacja nie
+powinna zapisywać kontaktów między różnymi sesjami (aktualizacja strony).
 
-## Deployment
+Wykorzystaj układ input z wmontowaną walidacją nazwy kontaktu.
 
-Aby skonfigurować wdrożenie projektu, należy wykonać kilka dodatkowych kroków
-w celu skonfigurowania repozytorium. Przejdź do zakładki `Settings` i w podsekcji
-`Actions` wybierz wybierz pozycję `General`.
-
-![GitHub actions settings](./assets/actions-config-step-1.png)
-
-Przewiń stronę w dół do ostatniej sekcji, a następnie wybierz opcje tak jak pokazano poniżej i kliknij `Save`. Bez tych ustawień zespół nie będzie miał uprawnień, aby zautomatyzować proces wdrażania.
-
-![GitHub actions settings](./assets/actions-config-step-2.png)
-
-Produkcyjna wersja projektu będzie automatycznie poddana pracy lintera, budowana
-i deployowana na GitHub Pages, w gałęzi `gh-pages` za każdym razem, gdy
-aktualizuje się gałąź `main`, na przykład po bezpośrednim pushu lub przyjętym
-pull requeście. W tym celu należy w pliku `package.json` zredagować pole
-`homepage`, zamieniając `your_username` i `your_repo_name` na swoje nazwy i
-wysłać zmiany do GitHub.
-
-```json
-"homepage": "https://your_username.github.io/your_repo_name/"
+```html
+<input
+  type="text"
+  name="name"
+  pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+  title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+  required
+/>
 ```
 
-Następnie należy przejść do ustawień repozytorium GitHub (`Settings` > `Pages`)
-i wydystrybuować wersję produkcyjną plików z folderu `/root` gałęzi `gh-pages`,
-jeśli nie zostało to wykonane automatycznie.
+Stan przechowywany w komponencie rodzicu `<App>` powinien wyglądać następująco,
+nie należy dodawać nowych właściwości.
 
-![GitHub Pages settings](./assets/repo-settings.png)
+```bash
+state = {
+  contacts: [],
+  name: ''
+}
+```
 
-### Status deploymentu
+Każdy kontakt powinien być obiektem z właściwościami `name` i `id`. Do
+generowania identyfikatorów wykorzystaj dowolną pasującą paczkę, na przykład
+[nanoid](https://www.npmjs.com/package/nanoid). Po tym kroku aplikacja powinna
+wyglądać mniej więcej tak.
 
-Status deploymentu ostatniego commitu wyświetla się jako ikona obok jego
-identyfikatora.
+![preview](./mockup/step-1.png)
 
-- **Żółty kolor** - wykonuje się zbudowanie i deployment projektu.
-- **Zielony kolor** - deploymnt zakończył się sukcesem.
-- **Czerwony kolor** - podczas pracy lintera, budowania lub deploymentu wystąpił
-  błąd.
+## Krok 2
 
-Bardziej szczegółowe informacje o statusie można zobaczyć po kliknięciu na
-ikonkę i przejściu w wyskakującym oknie do odnośnika `Details`.
+Rozszerz funkcjonalność aplikacji, pozwalając użytkownikom dodawać numery
+telefonów. W tym celu dodaj do formularza `<input type="tel">` oraz właściwość
+dla przechowywania jego wartości w stanie.
 
-![Deployment status](./assets/status.png)
+```bash
+state = {
+  contacts: [],
+  name: '',
+  number: ''
+}
+```
 
-### Deployowana strona
+Wykorzystaj układ input z wmontowaną walidacją numeru kontaktu.
 
-Po jakimś czasie, zazwyczaj kilku minut, zdeployowaną stronę będzie można
-zobaczyć pod adresem wskazanym w zredagowanej właściwości `homepage`. Tutaj na
-przykład znajduje się odnośnik do zdeployowanej strony w wersji dla tego
-repozytorium
-[https://goitacademy.github.io/react-homework-template](https://goitacademy.github.io/react-homework-template).
+```html
+<input
+  type="tel"
+  name="number"
+  pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+  title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+  required
+/>
+```
 
-Jeżeli otwiera się pusta strona, upewnij się, że w zakładce `Console` nie ma
-błędów związanych z nieprawidłowymi ścieżkami do plików CSS i JS projektu
-(**404**). Najprawdopodobniej wprowadzona została niewłaściwa wartość
-właściwości `homepage` w pliku `package.json`.
+Po tym kroku aplikacja powinna działać mniej więcej tak.
 
-### Trasowanie
+![preview](./mockup/step-2.png)
 
-Jeżeli aplikacja wykorzystuje bibliotekę `react-router-dom` dla trasowania,
-należy uzupełniająco skonfigurować komponent `<BrowserRouter>`, przekazując w
-propsie `basename` dokładną nazwę twojego repozytorium. Slash na początku i na
-końcu łańcucha jest obowiązkowy.
+## Krok 3
+
+Dodaj pole wyszukiwania, które można wykorzystać do filtrowania listy kontaktów
+po nazwie.
+
+- Pole wyszukiwania to input bez formularza, którego wartość zapisuje się w
+  stanie (kontrolowany element).
+- Logika filtrowania powinna być niewrażliwa na wielkość liter.
+
+```bash
+state = {
+  contacts: [],
+  filter: '',
+  name: '',
+  number: ''
+}
+```
+
+![preview](./mockup/step-3.gif)
+
+Gdy pracujemy nad nową funkcjonalnością, wygodne może być twarde zakodowanie
+niektórych danych w stanie. Sprawi to, że nie będziemy musieli ręcznie
+wprowadzać danych do interfejsu, aby przetestować pracę nowej funkcjonalności.
+Można na przykład wykorzystać taki stan początkowy.
+
+```bash
+state = {
+  contacts: [
+    {id: 'id-1', name: 'Rosie Simpson', number: '459-12-56'},
+    {id: 'id-2', name: 'Hermione Kline', number: '443-89-12'},
+    {id: 'id-3', name: 'Eden Clements', number: '645-17-79'},
+    {id: 'id-4', name: 'Annie Copeland', number: '227-91-26'},
+  ],
+  filter: '',
+  name: '',
+  number: ''
+}
+```
+
+## Krok 4
+
+Jeżeli twoja aplikacja jest realizowana w jednym komponencie `<App>`, wykonaj
+refaktor, rozdzielając pasujące części do oddzielnych komponentów. W stanie
+głównego komponentu `<App>` zostaną tylko właściwości `contacts` i `filter`.
+
+```bash
+state = {
+  contacts: [],
+  filter: ''
+}
+```
+
+Wystarczy wydzielić cztery komponenty: formularz dodania kontaktów, listę
+kontaktów, element listy kontaktów i filtr wyszukiwania.
+
+Po refaktorze źródłowy komponent aplikacji będzie wyglądał tak.
 
 ```jsx
-<BrowserRouter basename="/your_repo_name/">
-  <App />
-</BrowserRouter>
+<div>
+  <h1>Phonebook</h1>
+  <ContactForm ... />
+
+  <h2>Contacts</h2>
+  <Filter ... />
+  <ContactList ... />
+</div>
 ```
 
-## Jak to działa
+## Krok 5
 
-![How it works](./assets/how-it-works.png)
+Wyłącz użytkownikowi możliwość dodawania kontaktów, których nazwy są już w
+książce telefonicznej. W razie próby wykonania takiego działania, pokaż `alert`
+z ostrzeżeniem.
 
-1. Po każdym pushu do gałęzi `main` repozytorium GitHub, uruchamia się specjalny
-   skrypt (GitHub Action) z pliku `.github/workflows/deploy.yml`.
-2. Wszystkie pliki repozytorium kopiują się na serwer, gdzie projekt zostaje
-   zainicjowany i przechodzi pracę lintera oraz zbudowanie przed deploymentem.
-3. Jeżeli wszystkie kroki zakończyły się sukcesem, zbudowana wersja produkcyjna
-   plików projektu wysyłana jest do gałęzi `gh-pages`. W przeciwnym razie, w
-   logu wykonania skryptu zostanie wskazane z czym jest problem.
+![preview](./mockup/step-5.png)
+
+## Krok 6
+
+Rozszerz funkcjonalność aplikacji, pozwalając użytkownikowi usuwać wcześniej
+zapisane kontakty.
+
+![preview](./mockup/step-6.gif)
+
+## Krok 7
+
+Dodaj przechowywanie kontaktów w książce telefonicznej w localStorage.
+Wykorzystaj metody cyklu życia.
+
+Przy dodawaniu i usuwaniu kontaktów zapisują się one w lokalnym magazynie.
+
+W trakcie ładowania aplikacji, kontakty, jeśli jakieś istnieją, sczytują się z
+lokalnego magazynu i zapisują w stanie.
