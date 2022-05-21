@@ -17,16 +17,13 @@ const ContactForm = ({ onSubmit }) => {
       setName(value);
     }
 
-    if (number === 'number') {
+    if (name === 'number') {
       setNumber(value);
     }
   };
 
   const handleSubmit = e => {
     e.preventDefault();
-
-    const name = e.currentTarget.elements.name.value;
-    const number = e.currentTarget.elements.number.value;
 
     onSubmit({ name, number });
     setName('');
